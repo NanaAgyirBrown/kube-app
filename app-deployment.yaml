@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: invoicedb-deploy
+  labels:
+    app: invoicedb
+spec:
+  selector:
+    matchLabels:
+      app: invoicedb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: invoicedb
+    spec:
+      containers:
+        - name: invoicedb
+          image: /invoicedb:latest
+          volumeMounts:
+            - mountPath: /var/lib/postgres
+              name: invoice-db-data
+          ports:
+            - name: invoicedb-port
+              containerPort: 5432
+          env:
+            - name: DB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: db-pass
+      nodeSelector:
+        zone: us-east-1a
+      volumes:
+        - name: invoice-db-data
+          awsElasticBlockStore:
+            volumeID: vol-04f16e8705cafa21e
+            fsType: ext4
+      initContainers:
+        - name: busybox
+          image: busybox:latest
+          args: ["rm", "-rf", "/var/lib/postgres/lost+found"]
+          volumeMounts:
+            - mountPath: /var/lib/postgres
+              name: invoice-db-data
+
+

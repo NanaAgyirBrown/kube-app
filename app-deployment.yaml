@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: invoicedb
-          image: /invoicedb:latest
+          image: thinkai/invoicedb:v1
           volumeMounts:
             - mountPath: /var/lib/postgres
               name: invoice-db-data

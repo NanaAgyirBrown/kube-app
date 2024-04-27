@@ -34,7 +34,7 @@ spec:
       volumes:
         - name: invoice-db-data
           awsElasticBlockStore:
-            volumeID: vol-04f16e8705cafa21e
+            volumeID: vol-069084bafff5f7037
             fsType: ext4
       initContainers:
         - name: busybox
